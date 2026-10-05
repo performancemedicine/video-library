@@ -31,7 +31,7 @@
   --text: #1a2133; --muted: #5d6578; --link: #1d2b4f; --mark: #ffe8a3;
   --shadow: 0 1px 2px rgba(20, 30, 60, .06), 0 4px 14px rgba(20, 30, 60, .06);
   --c-Vitamin: #c46a12; --c-Supplement: #2c7a3f; --c-Hormone: #8a3ea8;
-  --c-Medication: #1f5fae; --c-Peptide: #c0272d; --c-Condition: #4b5872;
+  --c-Medication: #1f5fae; --c-Peptide: #c0272d; --c-Condition: #4b5872; --c-Lifestyle: #2e8a7a;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -39,7 +39,7 @@
     --text: #e9ecf3; --muted: #9aa3b6; --link: #a9bdf0; --mark: #5c4a12; --red-soft: #3a1d22;
     --shadow: 0 1px 2px rgba(0, 0, 0, .3);
     --c-Vitamin: #eba45c; --c-Supplement: #7cc68b; --c-Hormone: #c993e0;
-    --c-Medication: #84b2f2; --c-Peptide: #f0838a; --c-Condition: #aab4c8;
+    --c-Medication: #84b2f2; --c-Peptide: #f0838a; --c-Condition: #aab4c8; --c-Lifestyle: #6cc9b6;
   }
 }
 :root[data-theme="dark"] {
@@ -47,7 +47,7 @@
   --text: #e9ecf3; --muted: #9aa3b6; --link: #a9bdf0; --mark: #5c4a12; --red-soft: #3a1d22;
   --shadow: 0 1px 2px rgba(0, 0, 0, .3);
   --c-Vitamin: #eba45c; --c-Supplement: #7cc68b; --c-Hormone: #c993e0;
-  --c-Medication: #84b2f2; --c-Peptide: #f0838a; --c-Condition: #aab4c8;
+  --c-Medication: #84b2f2; --c-Peptide: #f0838a; --c-Condition: #aab4c8; --c-Lifestyle: #6cc9b6;
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }  /* hidden must win over display rules like .more { display: block } */
@@ -426,7 +426,8 @@ html.look-preview .site-header { display: block; }
     { id: "Hormone", label: "Hormones", ico: "⚖️" },
     { id: "Medication", label: "Medications", ico: "💊" },
     { id: "Peptide", label: "Peptides", ico: "🧬" },
-    { id: "Condition", label: "Conditions", ico: "🩺" }
+    { id: "Condition", label: "Conditions", ico: "🩺" },
+    { id: "Lifestyle", label: "Lifestyle", ico: "🏃" }
   ];
   var POPULAR_MAX = 14;
   var POPULAR = ["Testosterone", "Menopause", "Vitamin D", "Semaglutide", "Thyroid", "BPC-157", "Cholesterol", "Insomnia", "Peptides (general)", "Metformin"];
