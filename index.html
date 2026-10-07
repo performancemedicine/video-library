@@ -466,21 +466,42 @@ html.look-preview .site-header { display: block; }
     return safe.replace(new RegExp("\\b(" + words.join("|") + ")", "gi"), "<mark>$1</mark>");
   }
 
+  // Load the small main file first (page becomes usable), then the quotes in the background.
   function load() {
-    fetch("index.json?v=" + Date.now(), { cache: "no-store" })
+    var bust = "?v=" + Date.now();  // always fetch the latest library
+    fetch("index.json" + bust, { cache: "no-store" })
       .then(function (r) { if (!r.ok) throw 0; return r.json(); })
-      .then(init)
-      .catch(function () {
+      .then(function (d) {
+        init(d);
+        fetch("quotes.json" + bust, { cache: "no-store" })
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(applyQuotes).catch(function () {});
+      })
+      .catch(function () {  // opened straight from a file: everything is in index.data.js
         var s = document.createElement("script");
-        s.src = "index.data.js?v=" + Date.now();  // bypass cache so new episodes show up
-        s.onload = function () { init(window.PM_INDEX); };
+        s.src = "index.data.js" + bust;
+        s.onload = function () { init(window.PM_INDEX); applyQuotes(window.PM_QUOTES); };
         s.onerror = function () { $("stats").textContent = "Couldn't load the library"; };
         document.head.appendChild(s);
       });
   }
 
+  // Compact format: each clip is [video number, seconds, mentions, quote number].
+  function expand(d) {
+    if (d.format !== 2) return d;
+    d.topics.forEach(function (t) {
+      t.moments = t.moments.map(function (a) { return { v: d.vl[a[0]], t: a[1], n: a[2], q: a[3], x: "" }; });
+    });
+    return d;
+  }
+  function applyQuotes(q) {
+    if (!q || !topics.length) return;
+    topics.forEach(function (t) { t.moments.forEach(function (m) { if (m.q != null) m.x = q[m.q] || ""; }); });
+    if (!document.body.classList.contains("home")) render();  // fill in quotes on any open results
+  }
+
   function init(d) {
-    data = d;
+    data = expand(d);
     topics = d.topics.map(function (t) {
       t.key = norm(t.name + " " + t.category);
       t.words = t.key.split(" ");
@@ -554,7 +575,7 @@ html.look-preview .site-header { display: block; }
       "<div>" +
         '<a class="vt" href="' + url + '" target="_blank" rel="noopener">' + esc(shortTitle(v.title)) + "</a>" +
         '<div class="meta">' + esc(v.series) + (v.date ? " · " + fmtDate(v.date) : "") + (m.n > 1 ? " · discussed " + m.n + "×" : "") + "</div>" +
-        '<div class="x">“' + highlight(m.x, q) + "”</div>" +
+        (m.x ? '<div class="x">“' + highlight(m.x, q) + "”</div>" : "") +
         '<a class="watch" href="' + url + '" target="_blank" rel="noopener">▶ Watch at ' + fmtTs(m.t) + "</a>" +
       "</div></div>";
   }
